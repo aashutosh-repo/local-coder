@@ -1,14 +1,10 @@
 import * as vscode from "vscode";
 
 import { getCompletion } from "../api/client";
-import { extractContext } from "../context/extractor";
-import {
-    getCachedCompletion,
-    saveCompletion
-} from "./cache";
 import { log } from "../utils/logger";
-import { Debouncer } from "./debounce";
 import { CompletionScheduler } from "./scheduler";
+import { ContextEngine } from "../context/ContextEngine";
+import { CompletionCache } from "./cache/CompletionCache";
 
 const SUPPORTED_LANGUAGES = [
     "java",
@@ -24,6 +20,8 @@ export class LocalCopilotProvider
     implements vscode.InlineCompletionItemProvider {
 
     private scheduler = new CompletionScheduler();
+    private contextEngine = new ContextEngine();
+    private cache = new CompletionCache();
 
 
     async provideInlineCompletionItems(
@@ -35,18 +33,22 @@ export class LocalCopilotProvider
             return [];
         }
 
-        const { prefix, suffix } = extractContext(
+        // const { prefix, suffix } = ContextExtractor(
+        //     document,
+        //     position
+        // );
+        const context = this.contextEngine.build(
             document,
             position
         );
 
-        if (prefix.trim().length < 5) {
-            return [];
-        }
+        // if (prefix.trim().length < 5) {
+        //     return [];
+        // }
 
-        const cacheKey = prefix + suffix;
+        const cacheKey = JSON.stringify(context);
 
-        const cached = getCachedCompletion(cacheKey);
+        const cached = this.cache.get(context);
 
         if (cached) {
 
@@ -61,20 +63,9 @@ export class LocalCopilotProvider
         }
 
         try {
-
-            // const completion = await getCompletion({
-            //     language: document.languageId,
-            //     prefix,
-            //     suffix
-            // });
             const completion = await this.scheduler.schedule(
                 signal =>
-                    getCompletion({
-                        language: document.languageId,
-                        prefix,
-                        suffix
-                    },  signal
-                ),
+                    getCompletion(context, signal),
                 250
             );
 
@@ -82,8 +73,8 @@ export class LocalCopilotProvider
                 return [];
             }
 
-            saveCompletion(
-                cacheKey,
+            this.cache.put(
+                context,
                 completion
             );
 
