@@ -1,7 +1,6 @@
 export interface CompletionRequest {
     language: string;
-    prefix: string;
-    suffix: string;
+    prompt: string;
 }
 
 export interface CompletionResponse {

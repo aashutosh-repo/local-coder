@@ -5,11 +5,12 @@ import { CompletionScheduler } from "../completion/scheduler";
 import { CompletionCache } from "../completion/cache/CompletionCache";
 import { ResponseProcessor } from "../completion/ResponseProcessor";
 import { getCompletion } from "../api/client";
+import { PromptBuilder } from "../prompt/PromptBuilder";
 
 export class CompletionManager {
 
     private readonly contextEngine = new ContextEngine();
-
+    private readonly promptBuilder = new PromptBuilder();
     private readonly scheduler = new CompletionScheduler();
 
     private readonly cache = new CompletionCache();
@@ -25,6 +26,8 @@ export class CompletionManager {
             document,
             position
         );
+
+        const prompt = this.promptBuilder.build(context);
         const cached = this.cache.get(context);
 
         if (cached) {
@@ -43,7 +46,7 @@ export class CompletionManager {
         const completion = await this.scheduler.schedule(
             signal =>
                 getCompletion(
-                    context,
+                    prompt,
                     signal
                 ),
             250
