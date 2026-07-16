@@ -1,39 +1,29 @@
-import { CompletionContext } from "../context/models/CompletionContext";
 import { PromptContext } from "../api/models/PromptContext";
+import { AIRequest } from "../ai/models/AIRequest";
+import { TaskType } from "../ai/models/TaskType";
+import { IPromptStrategy } from "./strategies/IPromptStrategy";
+import { CompletionPromptStrategy } from "./strategies/CompletionPromptStrategy";
+import { ChatPromptStrategy } from "./strategies/ChatPromptStrategy";
+import { EditPromptStrategy } from "./strategies/EditPromptStrategy";
 
 export class PromptBuilder {
 
-    build(context: CompletionContext): PromptContext {
+    private strategies: Map<TaskType, IPromptStrategy> = new Map([
+        [TaskType.COMPLETION, new CompletionPromptStrategy()],
+        [TaskType.CHAT, new ChatPromptStrategy()],
+        [TaskType.EDIT, new EditPromptStrategy()]
+    ]);
 
-        const prompt = `
-You are an expert ${context.language} programmer.
+    build(request: AIRequest): PromptContext {
 
-The user is editing a file.
+        const strategy = this.strategies.get(request.task) 
+            || this.strategies.get(TaskType.COMPLETION);
 
-Code before cursor:
---------------------
-${context.prefix}
+        if (!strategy) {
+            throw new Error(`No strategy found for task type: ${request.task}`);
+        }
 
-Code after cursor:
---------------------
-${context.suffix}
-
-Complete ONLY the missing code.
-
-Rules:
-- Return only inserted code.
-- No markdown.
-- No explanations.
-- Don't repeat existing code.
-`;
-
-        return {
-
-            language: context.language,
-
-            prompt
-
-        };
+        return strategy.build(request);
 
     }
 

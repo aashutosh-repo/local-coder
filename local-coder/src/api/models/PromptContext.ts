@@ -1,4 +1,4 @@
 export interface PromptContext {
-    language : string;
-    prompt: string;
+    systemPrompt?: string;
+    userPrompt: string;
 }

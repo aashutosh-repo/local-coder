@@ -1,9 +1,10 @@
+import { AIRequest } from "../ai/models/AIRequest";
 import { CompletionRequest, CompletionResponse } from "../types/completion";
 
 const API_URL = "http://localhost:8000/complete";
 
 export async function getCompletion(
-    request: CompletionRequest, signal?: AbortSignal
+    request: AIRequest, signal?: AbortSignal
 ): Promise<string> {
 
     const response = await fetch(API_URL, {

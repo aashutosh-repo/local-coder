@@ -40,17 +40,11 @@ export class ContextEngine {
         return {
 
             language: document.languageId,
-
             fileName: document.fileName,
-
             packageName: this.packageExtractor.extract(document),
-
             imports: this.importExtractor.extract(document),
-
             className: this.classExtractor.extract(document, position),
-
             methodName: this.methodExtractor.extract(document, position),
-
             diagnostics: this.diagnosticExtractor.extract(document),
             relativePath: workspace.relativePath,
             workspaceName : workspace.workspaceName,
