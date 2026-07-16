@@ -15,8 +15,11 @@ service = CompletionService()
 
 def complete(request: CompletionRequest):
 
+    print("Input request : ",request);
+
     completion = service.complete(request)
 
+    print("Response : ", completion)
     return CompletionResponse(
 
         completion=completion

@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 
 import { ContextEngine } from "../context/ContextEngine";
-import { CompletionScheduler } from "../completion/scheduler";
-import { CompletionCache } from "../completion/cache/CompletionCache";
-import { ResponseProcessor } from "../completion/ResponseProcessor";
+import { CompletionScheduler } from "../features/completion/scheduler";
+import { CompletionCache } from "../features/completion/cache/CompletionCache";
+import { ResponseProcessor } from "../features/completion/ResponseProcessor";
 import { getCompletion } from "../api/client";
 import { PromptBuilder } from "../prompt/PromptBuilder";
 
@@ -22,10 +22,13 @@ export class CompletionManager {
         position: vscode.Position
     ): Promise<vscode.InlineCompletionItem[]> {
 
-        const context = this.contextEngine.build(
+
+        const context = await this.contextEngine.build(
             document,
             position
         );
+
+        const context6 = this.contextEngine
 
         const prompt = this.promptBuilder.build(context);
         const cached = this.cache.get(context);

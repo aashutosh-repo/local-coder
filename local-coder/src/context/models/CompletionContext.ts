@@ -18,4 +18,12 @@ export interface CompletionContext {
 
     diagnostics: string[];
 
+    workspaceName?: string;
+
+    relativePath?: string;
+
+    openFiles: string[];
+
+    symbols: string[];
+
 }

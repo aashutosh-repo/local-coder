@@ -1,4 +1,4 @@
-import { CompletionContext } from "../context/models/CompletionContext";
+import { CompletionContext } from "../../context/models/CompletionContext";
 
 export class ResponseProcessor {
 

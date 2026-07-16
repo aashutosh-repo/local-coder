@@ -9,13 +9,9 @@ You are an autocomplete engine.
 Language:
 {request.language}
 
-Code before cursor:
+prompt :
 
-{request.prefix}
-
-Code after cursor:
-
-{request.suffix}
+{request.prompt}
 
 Return ONLY the text to insert.
 

@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
 
-import { getCompletion } from "../api/client";
-import { log } from "../utils/logger";
+import { getCompletion } from "../../api/client";
+import { log } from "../../utils/logger";
 import { CompletionScheduler } from "./scheduler";
-import { ContextEngine } from "../context/ContextEngine";
+import { ContextEngine } from "../../context/ContextEngine";
 import { CompletionCache } from "./cache/CompletionCache";
-import { CompletionManager } from "../core/completionManager";
+import { CompletionManager } from "../../core/completionManager";
 
 const SUPPORTED_LANGUAGES = [
     "java",

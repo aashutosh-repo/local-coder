@@ -91,6 +91,41 @@ The goal of this project is to build a **fully local GitHub Copilot alternative*
                           VS Code Ghost Text
 ```
 
+```
+src
+│
+├── ai
+│   │
+│   ├── manager
+│   │      AIRequestManager.ts
+│   │
+│   ├── models
+│   │      AIRequest.ts
+│   │      AIResponse.ts
+│   │      TaskType.ts
+│   │
+│   ├── prompt
+│   │      PromptEngine.ts
+│   │      strategies
+│   │           CompletionPrompt.ts
+│   │           ChatPrompt.ts
+│   │           EditPrompt.ts
+│   │
+│   ├── provider
+│   │      AIProvider.ts
+│   │      OllamaProvider.ts
+│   │
+│   └── response
+│          ResponseProcessor.ts
+│
+├── context
+├── workspace
+├── completion
+├── chat
+├── commands
+└── extension.ts
+```
+
 ---
 
 # Project Structure

@@ -1,4 +1,4 @@
-import { CompletionContext } from "../../context/models/CompletionContext";
+import { CompletionContext } from "../../../context/models/CompletionContext";
 import { CacheKeyBuilder } from "./CacheKeyBuilder";
 
 export class CompletionCache {

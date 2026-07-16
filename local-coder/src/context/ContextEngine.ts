@@ -6,6 +6,9 @@ import { MethodExtractor } from "./extractors/MethodExtractor";
 import { PackageExtractor } from "./extractors/PackageExtractor";
 import { CompletionContext } from "./models/CompletionContext";
 import { CursorExtractor } from "./extractors/CursorExtractor";
+import { WorkspaceExtractor } from "./extractors/WorkspaceExtractor";
+import { OpenEditorsExtractor } from "./extractors/OpenEditorsExtractor";
+import { SymbolExtractor } from "./extractors/SymbolExtractor";
 
 export class ContextEngine {
 
@@ -20,11 +23,19 @@ export class ContextEngine {
     private diagnosticExtractor = new DiagnosticExtractor();
 
     private cursorExtractor = new CursorExtractor();
+    private readonly workspaceExtractor = new WorkspaceExtractor();
+    private readonly openEditorsExtractor = new OpenEditorsExtractor();
+    private readonly symbolExtractor = new SymbolExtractor();
 
-    build(
+    
+
+    async build(
         document: vscode.TextDocument,
         position: vscode.Position
-    ): CompletionContext {
+    ): Promise<CompletionContext> {
+        const workspace = this.workspaceExtractor.extract(document);
+        const openFiles = this.openEditorsExtractor.extract();
+        const symbols = await this.symbolExtractor.extract(document);
 
         return {
 
@@ -41,6 +52,10 @@ export class ContextEngine {
             methodName: this.methodExtractor.extract(document, position),
 
             diagnostics: this.diagnosticExtractor.extract(document),
+            relativePath: workspace.relativePath,
+            workspaceName : workspace.workspaceName,
+            openFiles,
+            symbols,
 
             ...this.cursorExtractor.extract(document, position)
 

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { LocalCopilotProvider } from "./completion/provider";
+import { LocalCopilotProvider } from "./features/completion/provider";
 
 export function activate(context: vscode.ExtensionContext) {
 
