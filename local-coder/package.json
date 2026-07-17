@@ -10,10 +10,17 @@
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished"
+    "onStartupFinished",
+    "onCommand:local-coder.generateCleanCode"
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "local-coder.generateCleanCode",
+        "title": "Local Coder: Generate Clean Code"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

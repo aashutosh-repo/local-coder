@@ -15,6 +15,10 @@ class CompletionService:
 
         prompt = PromptBuilder.build(request)
 
-        response = self.provider.complete(prompt)
+        response = self.provider.complete(
+            prompt,
+            temperature=request.temperature or 0.2,
+            max_tokens=request.maxTokens or 128,
+        )
 
         return ResponseCleaner.clean(response)

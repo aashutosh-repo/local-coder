@@ -7,7 +7,7 @@ import { ContextEngine } from "../../context/ContextEngine";
 import { CompletionCache } from "./cache/CompletionCache";
 import { CompletionManager } from "../../core/completionManager";
 
-const SUPPORTED_LANGUAGES = [
+export const SUPPORTED_LANGUAGES = [
     "java",
     "javascript",
     "typescript",

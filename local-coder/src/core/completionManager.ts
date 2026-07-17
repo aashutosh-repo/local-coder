@@ -50,20 +50,15 @@ export class CompletionManager {
         const request: AIRequest = {
 
             task: TaskType.COMPLETION,
-
             context,
-
             temperature: 0.2,
-
             maxTokens: 128
-
         };
 
         const response =
             await this.requestManager.execute(request);
 
-        const processed =
-            this.responseProcessor.process(
+        const processed = this.responseProcessor.process(
                 response.content,
                 context
             );

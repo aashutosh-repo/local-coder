@@ -1,18 +1,29 @@
+import re
+
+
 class ResponseCleaner:
 
     @staticmethod
     def clean(text: str):
+        if not text:
+            return ""
 
-        text = text.replace("```java", "")
+        cleaned = text.strip()
 
-        text = text.replace("```", "")
+        if not cleaned:
+            return ""
 
-        text = text.strip()
+        # Remove surrounding markdown fences if present.
+        cleaned = re.sub(r"^```(?:[a-zA-Z0-9_+-]+)?\s*", "", cleaned)
+        cleaned = re.sub(r"\s*```$", "", cleaned)
 
-        lines = text.splitlines()
+        # Remove common explanatory wrappers that the model may prepend.
+        lines = [line.rstrip() for line in cleaned.splitlines() if line.strip()]
+        if not lines:
+            return ""
 
-        if lines:
+        # Keep full multi-line code, but drop a leading explanation line if it does not look like code.
+        if lines and not re.search(r"[{}();]", lines[0]) and len(lines) > 1:
+            lines = lines[1:]
 
-            return lines[0]
-
-        return ""
+        return "\n".join(lines).strip()

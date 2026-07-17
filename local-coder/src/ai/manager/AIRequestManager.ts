@@ -7,14 +7,9 @@ import { OllamaProvider } from "../provider/OllamaProvider";
 
 export class AIRequestManager {
 
-    private readonly promptBuilder =
-        new PromptBuilder();
-
-    private readonly scheduler =
-        new CompletionScheduler();
-
-    private readonly provider =
-        new OllamaProvider();
+    private readonly promptBuilder = new PromptBuilder();
+    private readonly scheduler = new CompletionScheduler();
+    private readonly provider = new OllamaProvider();
 
     async execute(
         request: AIRequest
@@ -25,9 +20,7 @@ export class AIRequestManager {
 
         const response =
             await this.scheduler.schedule(
-
                 signal =>
-
                     this.provider.execute(
                         {
                             ...request,
@@ -35,9 +28,7 @@ export class AIRequestManager {
                         },
                         signal
                     ),
-
                 250
-
             );
 
         return response;
