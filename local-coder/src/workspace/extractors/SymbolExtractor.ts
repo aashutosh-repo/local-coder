@@ -3,7 +3,7 @@ import { SymbolInfo } from "../models/SymbolInfo";
 
 export class SymbolExtractor {
 
-    async extract(): Promise<SymbolInfo[]> {
+    async extract(document: vscode.TextDocument): Promise<SymbolInfo[]> {
 
         const result: SymbolInfo[] = [];
 

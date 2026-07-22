@@ -13,23 +13,47 @@ export class WorkspaceExtractor {
         );
 
         for (const uri of uris) {
-
-            const document = await vscode.workspace.openTextDocument(uri);
+            const path = uri.fsPath.toLowerCase();
+            const extension = path.split(".").pop() ?? "";
 
             files.push({
-
                 path: uri.fsPath,
-
                 name: uri.path.split("/").pop() ?? "",
-
-                language: document.languageId
-
+                language: this.inferLanguage(extension)
             });
-
         }
 
         return files;
+    }
 
+    private inferLanguage(extension: string): string {
+        switch (extension) {
+            case "ts":
+            case "tsx":
+                return "typescript";
+            case "js":
+            case "jsx":
+                return "javascript";
+            case "py":
+                return "python";
+            case "go":
+                return "go";
+            case "java":
+                return "java";
+            case "cs":
+                return "csharp";
+            case "cpp":
+            case "cc":
+            case "cxx":
+                return "cpp";
+            case "c":
+                return "c";
+            case "h":
+            case "hpp":
+                return "cpp";
+            default:
+                return "plaintext";
+        }
     }
 
 }

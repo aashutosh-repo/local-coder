@@ -9,19 +9,19 @@ import { CursorExtractor } from "./extractors/CursorExtractor";
 import { WorkspaceExtractor } from "./extractors/WorkspaceExtractor";
 import { OpenEditorsExtractor } from "./extractors/OpenEditorsExtractor";
 import { SymbolExtractor } from "./extractors/SymbolExtractor";
+import { WorkspaceStore } from "../workspace/WorkspaceStore";
 
 export class ContextEngine {
 
+    constructor(
+        private readonly workspaceStore: WorkspaceStore
+    ) {}
+
     private packageExtractor = new PackageExtractor();
-
     private importExtractor = new ImportExtractor();
-
     private classExtractor = new ClassExtractor();
-
     private methodExtractor = new MethodExtractor();
-
     private diagnosticExtractor = new DiagnosticExtractor();
-
     private cursorExtractor = new CursorExtractor();
     private readonly workspaceExtractor = new WorkspaceExtractor();
     private readonly openEditorsExtractor = new OpenEditorsExtractor();
@@ -36,7 +36,7 @@ export class ContextEngine {
         const workspace = this.workspaceExtractor.extract(document);
         const openFiles = this.openEditorsExtractor.extract();
         const symbols = await this.symbolExtractor.extract(document);
-
+        const workspacestore = this.workspaceStore.get(); 
         return {
 
             language: document.languageId,
@@ -46,11 +46,8 @@ export class ContextEngine {
             className: this.classExtractor.extract(document, position),
             methodName: this.methodExtractor.extract(document, position),
             diagnostics: this.diagnosticExtractor.extract(document),
-            relativePath: workspace.relativePath,
-            workspaceName : workspace.workspaceName,
-            openFiles,
-            symbols,
-
+            workspace: workspacestore!,
+            
             ...this.cursorExtractor.extract(document, position)
 
         };

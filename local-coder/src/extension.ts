@@ -4,8 +4,11 @@ import { ContextEngine } from "./context/ContextEngine";
 import { AIRequestManager } from "./ai/manager/AIRequestManager";
 import { AIRequest } from "./ai/models/AIRequest";
 import { TaskType } from "./ai/models/TaskType";
+import { WorkspaceStore } from "./workspace/WorkspaceStore";
+import { WorkspaceEngine } from "./workspace/WorkspaceEngine";
+import { WorkspaceIndexer } from "./workspace/WorkspaceIndexer";
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 
     console.log("Local Copilot Activated");
 
@@ -14,9 +17,24 @@ export function activate(context: vscode.ExtensionContext) {
         scheme: "file"
     }));
 
+    const workspaceStore =
+        new WorkspaceStore();
+
+    // Build the workspace once
+    const workspaceEngine =
+        new WorkspaceEngine();
+
+    const workspaceIndexer =
+        new WorkspaceIndexer(
+            workspaceEngine,
+            workspaceStore
+        );
+
+    await workspaceIndexer.initialize();
+
     const provider = vscode.languages.registerInlineCompletionItemProvider(
         selectors,
-        new LocalCopilotProvider()
+        new LocalCopilotProvider(workspaceStore)
     );
 
     context.subscriptions.push(provider);
@@ -49,7 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
                 },
                 async () => {
                     try {
-                        const contextEngine = new ContextEngine();
+                        const contextEngine = new ContextEngine(workspaceStore);
                         const context = await contextEngine.build(
                             editor.document,
                             editor.selection.active

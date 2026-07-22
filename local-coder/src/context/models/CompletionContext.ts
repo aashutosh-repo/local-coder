@@ -1,3 +1,5 @@
+import { WorkspaceContext } from "../../workspace/models/WorkspaceContext";
+
 export interface CompletionContext {
 
     language: string;
@@ -18,12 +20,6 @@ export interface CompletionContext {
 
     diagnostics: string[];
 
-    workspaceName?: string;
-
-    relativePath?: string;
-
-    openFiles: string[];
-
-    symbols: string[];
+    workspace: WorkspaceContext;
 
 }

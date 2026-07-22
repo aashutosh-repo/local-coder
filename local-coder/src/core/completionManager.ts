@@ -7,12 +7,18 @@ import { ResponseProcessor } from "../features/completion/ResponseProcessor";
 import { AIRequest } from "../ai/models/AIRequest";
 import { TaskType } from "../ai/models/TaskType";
 import { AIRequestManager } from "../ai/manager/AIRequestManager";
+import { WorkspaceStore } from "../workspace/WorkspaceStore";
 
 export class CompletionManager {
 
-    private readonly contextEngine = new ContextEngine();
-
+    private readonly contextEngine: ContextEngine;
     private readonly cache = new CompletionCache();
+        constructor(
+            private readonly workspaceStore: WorkspaceStore
+        ) {
+            this.contextEngine = new ContextEngine(this.workspaceStore);
+        }
+
 
     private readonly responseProcessor =
         new ResponseProcessor();

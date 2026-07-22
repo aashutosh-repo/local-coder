@@ -14,6 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
+.vscode-tests
 lib/
 lib64/
 parts/
@@ -220,3 +221,5 @@ __marimo__/
 #node modules
 node_modules/
 dist/
+.vscode-test/
+out/

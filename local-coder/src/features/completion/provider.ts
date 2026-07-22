@@ -6,6 +6,7 @@ import { CompletionScheduler } from "./scheduler";
 import { ContextEngine } from "../../context/ContextEngine";
 import { CompletionCache } from "./cache/CompletionCache";
 import { CompletionManager } from "../../core/completionManager";
+import { WorkspaceStore } from "../../workspace/WorkspaceStore";
 
 export const SUPPORTED_LANGUAGES = [
     "java",
@@ -21,10 +22,18 @@ export class LocalCopilotProvider
     implements vscode.InlineCompletionItemProvider {
 
     private scheduler = new CompletionScheduler();
-    private contextEngine = new ContextEngine();
+    // private contextEngine = new ContextEngine();
     private cache = new CompletionCache();
 
-    private readonly manager = new CompletionManager();
+    private readonly manager: CompletionManager;
+
+    constructor(
+        workspaceStore: WorkspaceStore
+    ) {
+        this.manager =
+            new CompletionManager(workspaceStore);
+    }
+    // private readonly manager = new CompletionManager();
 
     async provideInlineCompletionItems(
         document: vscode.TextDocument,
